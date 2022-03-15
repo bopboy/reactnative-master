@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "reactnative-master",
+    "slug": "reactnative-master",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "reactnative-master"
+}
