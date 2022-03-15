@@ -1,12 +1,17 @@
 import AppLoading from 'expo-app-loading';
 import React, { useState } from 'react';
-import { Text } from 'react-native';
+import { Text, Image } from 'react-native';
+import * as Font from 'expo-font'
+import { Ionicons } from '@expo/vector-icons'
+import { Asset } from 'expo-asset';
 
 export default function App() {
   const [ready, setReady] = useState(false)
   const onFinish = () => setReady(true)
   const startLoading = async () => {
-    await new Promise(resolve => setTimeout(resolve, 5000))
+    await Font.loadAsync(Ionicons.font)
+    await Asset.loadAsync(require('./screenshot.png'))
+    await Image.prefetch("https://bopboy.github.io/assets/img/me.png")
   }
   if (!ready) {
     return (
