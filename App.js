@@ -7,6 +7,7 @@ import { Asset, useAssets } from 'expo-asset'
 import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/Tabs'
 import Stack from './navigation/Stack';
+import Root from './navigation/Root';
 
 export default function App() {
   const [assets] = useAssets([require("./screenshot.png")])
@@ -18,7 +19,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack />
+      <Root />
     </NavigationContainer>
   );
 }

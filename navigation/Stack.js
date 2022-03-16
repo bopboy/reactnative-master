@@ -14,8 +14,10 @@ const ScreenTwo = ({ navigation: { navigate } }) => (
 // const ScreenThree = ({ navigation: { setOptions } }) => (
 //     <TouchableOpacity onPress={() => setOptions({ title: "Hello" })}><Text>go to Back (Two)</Text></TouchableOpacity>
 // )
-const ScreenThree = ({ navigation: { goBack } }) => (
-    <TouchableOpacity onPress={() => goBack()}><Text>go to Back (Two)</Text></TouchableOpacity>
+const ScreenThree = ({ navigation: { navigate } }) => (
+    <TouchableOpacity onPress={() => navigate("Tabs", { screen: "Search" })}>
+        <Text>go to Search</Text>
+    </TouchableOpacity>
 )
 
 const Stack = () => {
