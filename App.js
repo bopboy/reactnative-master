@@ -8,18 +8,24 @@ import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/Tabs'
 import Stack from './navigation/Stack';
 import Root from './navigation/Root';
+import { useColorScheme } from 'react-native';
+import { ThemeProvider } from 'styled-components/native';
+import { darkTheme, lightTheme } from './styled';
 
 export default function App() {
   const [assets] = useAssets([require("./screenshot.png")])
   const [loaded] = Font.useFonts(Ionicons.font)
+  const isDark = useColorScheme() === "dark"
   if (!assets || !loaded) {
     return (
       <AppLoading />
     )
   }
   return (
-    <NavigationContainer>
-      <Root />
-    </NavigationContainer>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
