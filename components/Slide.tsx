@@ -6,7 +6,6 @@ import { BlurView } from 'expo-blur'
 import Poster from './Poster'
 
 const BgImg = styled.Image``
-
 const Title = styled.Text<{ isDark: boolean }>`
     font-size: 16px;
     font-weight: 600;
@@ -31,6 +30,7 @@ const Overview = styled.Text<{ isDark: boolean }>`
 const Votes = styled(Overview)`
     font-size: 12px;
 `
+
 interface SlideProps {
     backdropPath: string
     posterPath: string

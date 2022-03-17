@@ -2,9 +2,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions } from 'react-native'
+import { ActivityIndicator, Dimensions, ScrollView } from 'react-native'
 import { TMDB_API_KEY } from '../config'
 import Slide from '../components/Slide'
+import Poster from '../components/Poster'
 
 const BASE_PATH = "https://api.themoviedb.org/3";
 const Container = styled.ScrollView`
@@ -14,6 +15,29 @@ const Loader = styled.View`
     justify-content: center;
     align-items: center;
     background-color: ${props => props.theme.mainBgColor};
+`
+const ListTile = styled.Text`
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 20px;
+`
+const TrendingScroll = styled.ScrollView`
+    margin-top: 10px;
+`
+const Movie = styled.View`
+    margin-right: 10px;
+    align-items: center;
+`
+const Title = styled.Text`
+    color: black;
+    font-weight: 600;
+    margin-top: 7px;
+    margin-bottom: 5px;
+`
+const Votes = styled.Text`
+    color: rgba(0,0,0,0.8);
+    font-size: 10px;
 `
 const { height: SCREEN_HEIGHT } = Dimensions.get("window")
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: { navigate } }) => {
@@ -51,7 +75,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                     autoplayTimeout={3.5}
                     showsButtons={false}
                     showsPagination={false}
-                    containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 3 }}
+                    containerStyle={{ marginBottom: 20, width: "100%", height: SCREEN_HEIGHT / 3 }}
                 >
                     {nowPlaying.map(movie => (
                         <Slide
@@ -64,6 +88,23 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                         />
                     ))}
                 </Swiper>
+                <ListTile>Trending Movies</ListTile>
+                <TrendingScroll
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingLeft: 20 }}
+                >
+                    {trending.map(movie => (
+                        <Movie key={movie.id}>
+                            <Poster path={movie.poster_path} />
+                            <Title>
+                                {movie.original_title.slice(0, 13)}
+                                {movie.original_title.length > 13 ? "..." : ""}
+                            </Title>
+                            <Votes>⭐️ {movie.vote_average} / 10</Votes>
+                        </Movie>
+                    ))}
+                </TrendingScroll>
             </Container>
         )
 }
