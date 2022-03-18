@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions, RefreshControl } from 'react-native'
+import { ActivityIndicator, Dimensions, RefreshControl, View } from 'react-native'
 import { TMDB_API_KEY } from '../config'
 import Slide from '../components/Slide'
 import HMedia from '../components/HMedia'
@@ -23,7 +23,7 @@ const ListTitle = styled.Text`
     font-weight: 600;
     margin-left: 20px;
 `
-const TrendingScroll = styled.ScrollView`
+const TrendingScroll = styled.FlatList`
     margin-top: 10px;
 `
 const ListContainer = styled.View`
@@ -94,30 +94,33 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                 <ListContainer>
                     <TrendingScroll
                         horizontal
+                        keyExtractor={item => item.id + ""}
                         showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingLeft: 20 }}
-                    >
-                        {trending.map(movie => (
+                        contentContainerStyle={{ paddingHorizontal: 20 }}
+                        data={trending}
+                        renderItem={({ item }) => (
                             <VMedia
-                                key={movie.id}
-                                posterPath={movie.poster_path}
-                                originalTitle={movie.original_title}
-                                voteAverage={movie.vote_average}
+                                posterPath={item.poster_path}
+                                originalTitle={item.original_title}
+                                voteAverage={item.vote_average}
                             />
-                        ))}
-                    </TrendingScroll>
+                        )}
+                        ItemSeparatorComponent={() => (<View style={{ width: 20 }} />)}
+                    />
                 </ListContainer>
                 <ComingSoonTitle>Coming Soon</ComingSoonTitle>
-                {upcoming.map(movie => (
-                    <HMedia
-                        key={movie.id}
-                        posterPath={movie.poster_path}
-                        originalTitle={movie.original_title}
-                        overview={movie.overview}
-                        releaseDate={movie.release_date}
-                    />
-                ))}
-            </Container>
+                {
+                    upcoming.map(movie => (
+                        <HMedia
+                            key={movie.id}
+                            posterPath={movie.poster_path}
+                            originalTitle={movie.original_title}
+                            overview={movie.overview}
+                            releaseDate={movie.release_date}
+                        />
+                    ))
+                }
+            </Container >
         )
 }
 
