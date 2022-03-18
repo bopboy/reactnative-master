@@ -3,14 +3,11 @@ import React, { useEffect, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import styled from 'styled-components/native'
 import { ActivityIndicator, Dimensions, FlatList, RefreshControl, View } from 'react-native'
-import { TMDB_API_KEY } from '../config'
 import Slide from '../components/Slide'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
-
-const BASE_PATH = "https://api.themoviedb.org/3";
-const Container = styled.ScrollView`
-`
+import { TMDB_API_KEY } from '../config'
+const BASE_PATH = "https://api.themoviedb.org/3"
 const Loader = styled.View`
     flex: 1;
     justify-content: center;
@@ -29,9 +26,14 @@ const TrendingScroll = styled.FlatList`
 const ListContainer = styled.View`
     margin-bottom: 40px;
 `
-
 const ComingSoonTitle = styled(ListTitle)`
     margin-bottom: 30px;
+`
+const VSeparator = styled.View`
+    height: 20px;
+`
+const HSeparator = styled.View`
+    width: 20px;
 `
 const { height: SCREEN_HEIGHT } = Dimensions.get("window")
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: { navigate } }) => {
@@ -58,12 +60,29 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
     }
     useEffect(() => {
         getData()
+        return () => setLoading(false)
     }, [])
     const onRefresh = async () => {
         setRefreshing(true)
         await getData()
         setRefreshing(false)
     }
+    const renderVMedia = ({ item }) => (
+        <VMedia
+            posterPath={item.poster_path}
+            originalTitle={item.original_title}
+            voteAverage={item.vote_average}
+        />
+    )
+    const renderHMedia = ({ item }) => (
+        <HMedia
+            posterPath={item.poster_path}
+            originalTitle={item.original_title}
+            overview={item.overview}
+            releaseDate={item.release_date}
+        />
+    )
+    const movieKeyExtractor = (item) => item.id + ""
     return loading ?
         (<Loader><ActivityIndicator size="large" color="#00ff00" /></Loader>) :
         (
@@ -71,17 +90,9 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                 onRefresh={onRefresh}
                 refreshing={refreshing}
                 data={upcoming}
-                keyExtractor={item => item.id + ""}
-                ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-                renderItem={({ item }) => (
-                    <HMedia
-                        key={item.id}
-                        posterPath={item.poster_path}
-                        originalTitle={item.original_title}
-                        overview={item.overview}
-                        releaseDate={item.release_date}
-                    />
-                )}
+                keyExtractor={movieKeyExtractor}
+                ItemSeparatorComponent={VSeparator}
+                renderItem={renderHMedia}
                 ListHeaderComponent={
                     <>
                         <Swiper
@@ -108,18 +119,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                         <ListContainer>
                             <TrendingScroll
                                 horizontal
-                                keyExtractor={item => item.id + ""}
+                                keyExtractor={movieKeyExtractor}
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{ paddingHorizontal: 20 }}
                                 data={trending}
-                                renderItem={({ item }) => (
-                                    <VMedia
-                                        posterPath={item.poster_path}
-                                        originalTitle={item.original_title}
-                                        voteAverage={item.vote_average}
-                                    />
-                                )}
-                                ItemSeparatorComponent={() => (<View style={{ width: 20 }} />)}
+                                renderItem={renderVMedia}
+                                ItemSeparatorComponent={HSeparator}
                             />
                         </ListContainer>
                         <ComingSoonTitle>Coming Soon</ComingSoonTitle>

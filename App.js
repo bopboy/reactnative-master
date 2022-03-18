@@ -5,12 +5,13 @@ import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons'
 import { Asset, useAssets } from 'expo-asset'
 import { NavigationContainer } from '@react-navigation/native'
-import Tabs from './navigation/Tabs'
-import Stack from './navigation/Stack';
 import Root from './navigation/Root';
 import { useColorScheme } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 import { darkTheme, lightTheme } from './styled';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient(queryClient)
 
 export default function App() {
   const [assets] = useAssets([require("./screenshot.png")])
@@ -22,10 +23,12 @@ export default function App() {
     )
   }
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
