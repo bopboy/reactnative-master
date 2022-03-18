@@ -53,7 +53,7 @@ const Slide: React.FC<SlideProps> = ({
                 source={{ uri: makeImagePath(backdropPath) }}
             />
             <BlurView
-                intensity={100}
+                intensity={70}
                 style={StyleSheet.absoluteFill}
                 tint={isDark ? "light" : "dark"}
             >

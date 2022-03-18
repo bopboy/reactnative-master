@@ -6,7 +6,7 @@ import { ActivityIndicator, Dimensions, FlatList } from 'react-native'
 import Slide from '../components/Slide'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { moviesApi } from '../api'
 
 const Loader = styled.View`
@@ -38,12 +38,12 @@ const HSeparator = styled.View`
 `
 const { height: SCREEN_HEIGHT } = Dimensions.get("window")
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: { navigate } }) => {
-    const [refreshing, setRefreshing] = useState(false)
-    const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery("nowPlaying", moviesApi.nowPlaying)
-    const { isLoading: upcomingLoading, data: upcomingData } = useQuery("upcoming", moviesApi.upcoming)
-    const { isLoading: trendingLoading, data: trendingData } = useQuery("trending", moviesApi.trending)
+    const queryClient = useQueryClient()
+    const { isLoading: nowPlayingLoading, data: nowPlayingData, isRefetching: isRefetchingNowPlaying } = useQuery(["movies", "nowPlaying"], moviesApi.nowPlaying)
+    const { isLoading: upcomingLoading, data: upcomingData, isRefetching: isRefetchingUpcoming } = useQuery(["movies", "upcoming"], moviesApi.upcoming)
+    const { isLoading: trendingLoading, data: trendingData, isRefetching: isRefetchingTrending } = useQuery(["movies", "trending"], moviesApi.trending)
     const onRefresh = async () => {
-
+        queryClient.refetchQueries(["movies"])
     }
     const renderVMedia = ({ item }) => (
         <VMedia
@@ -62,6 +62,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
     )
     const movieKeyExtractor = (item) => item.id + ""
     const loading = nowPlayingLoading || upcomingLoading || trendingLoading
+    const refreshing = isRefetchingNowPlaying || isRefetchingTrending || isRefetchingUpcoming
+    console.log(refreshing)
     return loading ?
         (<Loader><ActivityIndicator size="large" color="#00ff00" /></Loader>) :
         (
