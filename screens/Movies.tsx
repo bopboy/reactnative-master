@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions, ScrollView } from 'react-native'
+import { ActivityIndicator, Dimensions } from 'react-native'
 import { TMDB_API_KEY } from '../config'
 import Slide from '../components/Slide'
 import Poster from '../components/Poster'
@@ -16,7 +16,7 @@ const Loader = styled.View`
     align-items: center;
     background-color: ${props => props.theme.mainBgColor};
 `
-const ListTile = styled.Text`
+const ListTitle = styled.Text`
     color: black;
     font-size: 18px;
     font-weight: 600;
@@ -38,6 +38,31 @@ const Title = styled.Text`
 const Votes = styled.Text`
     color: rgba(0,0,0,0.8);
     font-size: 10px;
+`
+const ListContainer = styled.View`
+    margin-bottom: 40px;
+`
+const HMovie = styled.View`
+    padding: 0 30px;
+    margin-bottom: 10px;
+    flex-direction: row;
+`
+const HColumn = styled.View`
+    margin-left: 15px;
+    width: 80%;
+`
+const Overview = styled.Text`
+    color: black;
+    opacity: 0.5;
+    width: 80%;
+`
+const Release = styled.Text`
+    color: black;
+    font-size: 12px;
+    margin-vertical: 10px;
+`
+const ComingSoonTitle = styled(ListTitle)`
+    margin-bottom: 30px;
 `
 const { height: SCREEN_HEIGHT } = Dimensions.get("window")
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: { navigate } }) => {
@@ -88,23 +113,38 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                         />
                     ))}
                 </Swiper>
-                <ListTile>Trending Movies</ListTile>
-                <TrendingScroll
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingLeft: 20 }}
-                >
-                    {trending.map(movie => (
-                        <Movie key={movie.id}>
-                            <Poster path={movie.poster_path} />
-                            <Title>
-                                {movie.original_title.slice(0, 13)}
-                                {movie.original_title.length > 13 ? "..." : ""}
-                            </Title>
-                            <Votes>⭐️ {movie.vote_average} / 10</Votes>
-                        </Movie>
-                    ))}
-                </TrendingScroll>
+                <ListTitle>Trending Movies</ListTitle>
+                <ListContainer>
+                    <TrendingScroll
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingLeft: 20 }}
+                    >
+                        {trending.map(movie => (
+                            <Movie key={movie.id}>
+                                <Poster path={movie.poster_path} />
+                                <Title>
+                                    {movie.original_title.slice(0, 13)}
+                                    {movie.original_title.length > 13 ? "..." : ""}
+                                </Title>
+                                <Votes>{movie.vote_average > 0 ? `⭐️ ${movie.vote_average}/10` : `Coming Soon`}</Votes>
+                            </Movie>
+                        ))}
+                    </TrendingScroll>
+                </ListContainer>
+                <ComingSoonTitle>Coming Soon</ComingSoonTitle>
+                {upcoming.map(movie => (
+                    <HMovie key={movie.id}>
+                        <Poster path={movie.poster_path} />
+                        <HColumn>
+                            <Title>{movie.original_title}</Title>
+                            <Release>{new Date(movie.release_date).toLocaleDateString("ko", {
+                                month: "long", day: "numeric", year: "numeric"
+                            })}</Release>
+                            <Overview>{movie.overview !== "" && movie.overview.length > 140 ? `${movie.overview.slice(0, 140)}...` : movie.overview}</Overview>
+                        </HColumn>
+                    </HMovie>
+                ))}
             </Container>
         )
 }
