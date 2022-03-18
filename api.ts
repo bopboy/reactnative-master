@@ -9,3 +9,5 @@ const upcoming = () =>
 
 const nowPlaying = () =>
     fetch(`${BASE_PATH}/movie/now_playing?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json())
+
+export const moviesApi = { trending, upcoming, nowPlaying }
