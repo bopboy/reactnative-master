@@ -8,22 +8,14 @@ import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
 import { useQuery, useQueryClient } from 'react-query'
 import { MovieResponse, moviesApi, Movie } from '../api'
+import Loader from '../components/Loader'
 
-const Loader = styled.View`
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    background-color: ${props => props.theme.mainBgColor};
-`
 const ListTitle = styled.Text`
     color: black;
     font-size: 18px;
     font-weight: 600;
     margin-left: 20px;
 `
-// const TrendingScroll = styled.FlatList`
-//     margin-top: 10px;
-// `
 const ListContainer = styled.View`
     margin-bottom: 40px;
 `
@@ -48,7 +40,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
     const loading = nowPlayingLoading || upcomingLoading || trendingLoading
     const refreshing = isRefetchingNowPlaying || isRefetchingTrending || isRefetchingUpcoming
     return loading ?
-        (<Loader><ActivityIndicator size="large" color="#00ff00" /></Loader>) :
+        <Loader /> :
         (
             <FlatList
                 onRefresh={onRefresh}
