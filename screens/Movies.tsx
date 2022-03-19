@@ -21,9 +21,9 @@ const ListTitle = styled.Text`
     font-weight: 600;
     margin-left: 20px;
 `
-const TrendingScroll = styled.FlatList`
-    margin-top: 10px;
-`
+// const TrendingScroll = styled.FlatList`
+//     margin-top: 10px;
+// `
 const ListContainer = styled.View`
     margin-bottom: 40px;
 `
@@ -31,7 +31,7 @@ const ComingSoonTitle = styled(ListTitle)`
     margin-bottom: 30px;
 `
 const VSeparator = styled.View`
-    height: 20px;
+    height: 10px;
 `
 const HSeparator = styled.View`
     width: 20px;
@@ -59,7 +59,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                 renderItem={
                     ({ item }) => (
                         <HMedia
-                            posterPath={item.poster_path}
+                            posterPath={item.poster_path || ""}
                             originalTitle={item.original_title}
                             overview={item.overview}
                             releaseDate={item.release_date}
@@ -90,7 +90,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                         </Swiper>
                         <ListTitle>Trending Movies</ListTitle>
                         <ListContainer>
-                            <TrendingScroll
+                            {trendingData ? (<FlatList
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{ paddingHorizontal: 20 }}
@@ -99,14 +99,14 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: {
                                 renderItem={
                                     ({ item }) => (
                                         <VMedia
-                                            posterPath={item.poster_path}
+                                            posterPath={item.poster_path || ""}
                                             originalTitle={item.original_title}
                                             voteAverage={item.vote_average}
                                         />
                                     )
                                 }
                                 ItemSeparatorComponent={HSeparator}
-                            />
+                            />) : null}
                         </ListContainer>
                         <ComingSoonTitle>Coming Soon</ComingSoonTitle>
                     </>
