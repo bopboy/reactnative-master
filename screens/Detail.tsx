@@ -1,10 +1,18 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
-const Detail = () => {
+const Container = styled.ScrollView`
+    background-color: ${props => props.theme.mainBgColor};
+`
+
+const Detail = ({ navigation: { setOptions }, route: { params: { originalTitle } } }) => {
+    useEffect(() => {
+        setOptions({ title: originalTitle })
+    }, [])
     return (
-        <View><Text>detail</Text></View>
+        <Container><Text>detail</Text></Container>
     )
 }
 export default Detail

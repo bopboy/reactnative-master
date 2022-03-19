@@ -33,6 +33,7 @@ export const moviesApi = {
         fetch(`${BASE_PATH}/movie/upcoming?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
     nowPlaying: () =>
         fetch(`${BASE_PATH}/movie/now_playing?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
+    //@ts-ignore
     search: ({ queryKey }) => {
         const [_, query] = queryKey
         return fetch(`${BASE_PATH}/search/movie?api_key=${TMDB_API_KEY}&page=1&query=${query}`).then(res => res.json())
@@ -46,6 +47,7 @@ export const tvApi = {
         fetch(`${BASE_PATH}/tv/airing_today?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
     topRated: () =>
         fetch(`${BASE_PATH}/tv/top_rated?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
+    //@ts-ignore
     search: ({ queryKey }) => {
         const [_, query] = queryKey
         return fetch(`${BASE_PATH}/search/tv?api_key=${TMDB_API_KEY}&page=1&query=${query}`).then(res => res.json())
