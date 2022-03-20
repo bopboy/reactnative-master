@@ -3,8 +3,9 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
 import { useEffect } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
+import { useQuery } from 'react-query'
 import styled from 'styled-components/native'
-import { Movie, TV } from '../api'
+import { Movie, moviesApi, TV, tvApi } from '../api'
 import { BLACK_COLOR } from '../colors'
 import Poster from '../components/Poster'
 import { makeImagePath } from '../utils'
@@ -43,6 +44,10 @@ const Detail: React.FC<DetailScreenProps> =
         useEffect(() => {
             setOptions({ title: "original_title" in params ? "Movie" : "TV Show" })
         }, [])
+        const { isLoading: moviesLoading, data: moviesData } = useQuery(["movies", params.id], moviesApi.detail, { enabled: "original_title" in params })
+        const { isLoading: tvLoading, data: tvData } = useQuery(["tv", params.id], tvApi.detail, { enabled: "original_name" in params })
+        console.log("movies", moviesData)
+        console.log("tv", tvData)
         return (
             <Container>
                 <Header>

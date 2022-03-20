@@ -53,6 +53,11 @@ export const moviesApi = {
     search: ({ queryKey }) => {
         const [_, query] = queryKey
         return fetch(`${BASE_PATH}/search/movie?api_key=${TMDB_API_KEY}&page=1&query=${query}`).then(res => res.json())
+    },
+    //@ts-ignore
+    detail: ({ queryKey }) => {
+        const [_, id] = queryKey
+        return fetch(`${BASE_PATH}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos,images`).then(res => res.json())
     }
 }
 
@@ -67,5 +72,10 @@ export const tvApi = {
     search: ({ queryKey }) => {
         const [_, query] = queryKey
         return fetch(`${BASE_PATH}/search/tv?api_key=${TMDB_API_KEY}&page=1&query=${query}`).then(res => res.json())
+    },
+    //@ts-ignore
+    detail: ({ queryKey }) => {
+        const [_, id] = queryKey
+        return fetch(`${BASE_PATH}/tv/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos,images`).then(res => res.json())
     }
 }
