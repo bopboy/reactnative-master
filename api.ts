@@ -45,8 +45,9 @@ export interface MovieResponse extends BaseResponse {
 export const moviesApi = {
     trending: () =>
         fetch(`${BASE_PATH}/trending/movie/week?api_key=${TMDB_API_KEY}`).then(res => res.json()),
-    upcoming: () =>
-        fetch(`${BASE_PATH}/movie/upcoming?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
+    //@ts-ignore
+    upcoming: ({ pageParam }) =>
+        fetch(`${BASE_PATH}/movie/upcoming?api_key=${TMDB_API_KEY}&page=${pageParam}`).then(res => res.json()),
     nowPlaying: () =>
         fetch(`${BASE_PATH}/movie/now_playing?api_key=${TMDB_API_KEY}&page=1&region=kr`).then(res => res.json()),
     //@ts-ignore
