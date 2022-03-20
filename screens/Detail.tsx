@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
 import { useEffect } from 'react'
-import { Dimensions, StyleSheet, Linking } from 'react-native'
+import { Dimensions, StyleSheet, Linking, TouchableOpacity, Share, Platform } from 'react-native'
 import { useQuery } from 'react-query'
 import styled from 'styled-components/native'
 import { Movie, moviesApi, TV, tvApi } from '../api'
@@ -57,13 +57,38 @@ type DetailScreenProps = NativeStackScreenProps<RootStackParamList, "Detail">
 const Detail: React.FC<DetailScreenProps> =
     ({ navigation: { setOptions }, route: { params } }) => {
         const isMovie = "original_title" in params
+        const shareMedia = async () => {
+            const isAndroid = Platform.OS === 'android'
+            const homepage = isMovie ? `https://www.imdb.com/title/${data.imdb_id}/` : data.homepage
+            if (isAndroid) {
+                await Share.share({
+                    message: `${params.overview}\nCheck it out: ${homepage}`,
+                    title: "original_title" in params ? params.original_title : params.original_name
+                })
+            } else {
+                await Share.share({
+                    url: homepage,
+                    title: "original_title" in params ? params.original_title : params.original_name
+                })
+            }
+        }
+        const ShareButton = () => (
+            <TouchableOpacity onPress={shareMedia}>
+                <Ionicons name="share-outline" color="black" size={24} />
+            </TouchableOpacity>
+        )
         const { isLoading, data } = useQuery(
             [isMovie ? "movies" : "tv", params.id],
             isMovie ? moviesApi.detail : tvApi.detail,
         )
         useEffect(() => {
-            setOptions({ title: "original_title" in params ? "Movie" : "TV Show" })
+            setOptions({
+                title: "original_title" in params ? "Movie" : "TV Show",
+            })
         }, [])
+        useEffect(() => {
+            if (data) setOptions({ headerRight: () => <ShareButton /> })
+        }, [data])
         const openYTLink = async (vidoeId: string) => {
             const baseUrl = `https://m.youtube.com/watch?v=${vidoeId}`
             // await Linking.openURL(baseUrl)
